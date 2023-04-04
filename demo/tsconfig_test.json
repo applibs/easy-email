@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "es2015"],
+    "allowJs": true,
+    "jsx": "react",
+    //"types": ["vite/client", "node"],
+    "outDir": "./dist",
+    "moduleResolution": "Node",
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "alwaysStrict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": false,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@demo": ["src"],
+      "@demo/*": ["src/*"],
+      "easy-email-localization/*": ["../packages/easy-email-localization/*"],
+      "easy-email-editor/lib/locales.json": ["../packages/easy-email-editor/lib/locales.json"],
+      "easy-email-editor": ["../packages/easy-email-editor/src/index.tsx"],
+      "easy-email-core": ["../packages/easy-email-core/src/index.tsx"],
+      "easy-email-extensions": ["../packages/easy-email-extensions/src/index.tsx"],
+      "easy-email-config-panel": ["../packages/easy-email-config-panel/src/index.tsx"]
+    }
+  },
+  "include": ["./src", "./example", "./typings"],
+  "exclude": ["node_modules"]
+}

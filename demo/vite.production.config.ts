@@ -19,8 +19,8 @@ export default defineConfig({
   define: {},
   build: {
     minify: true,
-    manifest: true,
-    sourcemap: true,
+    manifest: false,
+    sourcemap: false,
     target: 'es2015',
     rollupOptions: {
       output: {

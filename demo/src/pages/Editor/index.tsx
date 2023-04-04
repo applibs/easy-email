@@ -31,6 +31,7 @@ import { UserStorage } from '@demo/utils/user-storage';
 import { useCollection } from './components/useCollection';
 import { AdvancedType, BasicType, IBlockData, JsonToMjml } from 'easy-email-core';
 import {
+  BlockAttributeConfigurationManager,
   BlockMarketManager,
   ExtensionProps,
   StandardLayout,
@@ -51,12 +52,15 @@ import { useMergeTagsModal } from './components/useMergeTagsModal';
 import { useWindowSize } from 'react-use';
 import { CustomBlocksType } from './components/CustomBlocks/constants';
 import localesData from 'easy-email-localization/locales/locales.json';
+import { t } from '@core/utils';
 
-console.log(localesData);
+//console.log(localesData);
 
 const defaultCategories: ExtensionProps['categories'] = [
   {
-    label: 'Content',
+    get label() {
+      return t('Content');
+    },
     active: true,
     blocks: [
       {
@@ -84,15 +88,25 @@ const defaultCategories: ExtensionProps['categories'] = [
       {
         type: AdvancedType.WRAPPER,
       },
+      /*{
+        type: AdvancedType.CAROUSEL,
+      },
+      {
+        type: AdvancedType.ACCORDION,
+      },*/
     ],
   },
   {
-    label: 'Layout',
+    get label() {
+      return t('Layout');
+    },
     active: true,
     displayType: 'column',
     blocks: [
       {
-        title: '2 columns',
+        get title() {
+          return t('2 columns');
+        },
         payload: [
           ['50%', '50%'],
           ['33%', '67%'],
@@ -102,7 +116,9 @@ const defaultCategories: ExtensionProps['categories'] = [
         ],
       },
       {
-        title: '3 columns',
+        get title() {
+          return t('3 columns');
+        },
         payload: [
           ['33.33%', '33.33%', '33.33%'],
           ['25%', '25%', '50%'],
@@ -110,13 +126,17 @@ const defaultCategories: ExtensionProps['categories'] = [
         ],
       },
       {
-        title: '4 columns',
+        get title() {
+          return t('4 columns');
+        },
         payload: [['25%', '25%', '25%', '25%']],
       },
     ],
   },
   {
-    label: 'Custom',
+    get label() {
+      return t('Custom');
+    },
     active: true,
     displayType: 'custom',
     blocks: [
@@ -165,15 +185,7 @@ const fontList = [
   'Courier New',
   'Georgia',
   'Lato',
-  'Montserrat',
-  '黑体',
-  '仿宋',
-  '楷体',
-  '标楷体',
-  '华文仿宋',
-  '华文楷体',
-  '宋体',
-  '微软雅黑',
+  'Montserrat'
 ].map(item => ({ value: item, label: item }));
 
 export default function Editor() {
@@ -182,7 +194,7 @@ export default function Editor() {
   const dispatch = useDispatch();
   const history = useHistory();
   const templateData = useAppSelector('template');
-  const [locale, setLocale] = useState('zh-Hans');
+  const [locale, setLocale] = useState('cs');
   const { addCollection, removeCollection, collectionCategory } = useCollection();
 
   const { width } = useWindowSize();
@@ -197,7 +209,7 @@ export default function Editor() {
     openModal: openMergeTagsModal,
     mergeTags,
     setMergeTags,
-  } = useMergeTagsModal(testMergeTags);
+  } = useMergeTagsModal(testMergeTags || {});
 
   const isSubmitting = useLoading([
     template.loadings.create,
@@ -223,7 +235,7 @@ export default function Editor() {
         dispatch(template.actions.fetchById({ id: +id, userId: +userId }));
       }
     } else {
-      dispatch(template.actions.fetchDefaultTemplate(undefined));
+      //dispatch(template.actions.fetchDefaultTemplate(undefined));
     }
 
     return () => {
@@ -293,7 +305,18 @@ export default function Editor() {
   };
 
   const initialValues: IEmailTemplate | null = useMemo(() => {
-    if (!templateData) return null;
+
+    if (!templateData) {
+      const data = window.localStorage.getItem('EMAIL_TEMPLATE');
+      if(data) {
+        const data2 = JSON.parse(data);
+        const sourceData = cloneDeep(data2.content) as IBlockData;
+        return {
+          ...data2,
+          content: sourceData, // replace standard block
+        };
+      }
+    }
     const sourceData = cloneDeep(templateData.content) as IBlockData;
     return {
       ...templateData,
@@ -301,12 +324,34 @@ export default function Editor() {
     };
   }, [templateData]);
 
+  // save callback
   const onSubmit = useCallback(
     async (
       values: IEmailTemplate,
       form: FormApi<IEmailTemplate, Partial<IEmailTemplate>>,
     ) => {
       pushEvent({ event: 'EmailSave' });
+
+      //ulozit do localStorage
+      window.localStorage.setItem('EMAIL_TEMPLATE', JSON.stringify(values));
+      Message.success('Saved success!');
+
+      //export to mjml a pak to html
+      const mjml = (await import('mjml-browser')).default;
+      const htmlContent = mjml(
+          JsonToMjml({
+            data: values.content,
+            mode: 'production',
+            context: values.content,
+          }),
+          {
+            beautify: true,
+            validationLevel: 'soft',
+          },
+      ).html;
+      window.localStorage.setItem('EMAIL_HTML', htmlContent);
+
+      /*
       if (id) {
         const isChanged = !(
           isEqual(initialValues?.content, values.content) &&
@@ -340,7 +385,7 @@ export default function Editor() {
             },
           }),
         );
-      }
+      }*/
     },
     [dispatch, history, id, initialValues],
   );
@@ -369,6 +414,16 @@ export default function Editor() {
   }
 
   if (!initialValues) return null;
+
+  const DefaultPageConfigPanel = BlockAttributeConfigurationManager.get(BasicType.PAGE);
+  BlockAttributeConfigurationManager.add({
+    [BasicType.PAGE]: () => (
+        <DefaultPageConfigPanel
+            hideSubject
+            hideSubTitle
+        />
+    ),
+  });
 
   return (
     <div>
@@ -402,8 +457,8 @@ export default function Editor() {
             <>
               <PageHeader
                 style={{ background: 'var(--color-bg-2)' }}
-                backIcon
-                title='Edit'
+                backIcon={false}
+                title=''
                 onBack={() => history.push('/')}
                 extra={
                   <Stack alignment='center'>
@@ -427,12 +482,11 @@ export default function Editor() {
                       value={locale}
                     >
                       <Select.Option value='en'>English</Select.Option>
-                      <Select.Option value='zh-Hans'>中文简体</Select.Option>
-                      <Select.Option value='ja'>Japanese</Select.Option>
+                      <Select.Option value='cs'>Čeština</Select.Option>
                       <Select.Option value='it'>Italian</Select.Option>
                     </Select>
 
-                    <Button onClick={openMergeTagsModal}>Update mergeTags</Button>
+                    
 
                     <Button onClick={() => onExportMJML(values)}>Export MJML</Button>
 
@@ -448,29 +502,6 @@ export default function Editor() {
                     >
                       Save
                     </Button>
-                    <a
-                      href='https://www.buymeacoffee.com/easyemail?utm_source=webside&utm_medium=button&utm_content=donate'
-                      target='_blank'
-                      onClick={ev => {
-                        ev.preventDefault();
-                        pushEvent({ event: 'Donate' });
-                        window.open(
-                          'https://www.buymeacoffee.com/easyemail?utm_source=webside&utm_medium=button&utm_content=donate',
-                          '_blank',
-                        );
-                      }}
-                    >
-                      <img
-                        style={{
-                          marginTop: -16,
-                          position: 'relative',
-                          top: 11,
-                          height: 32,
-                        }}
-                        src='https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png'
-                        alt='Buy Me A Coffee'
-                      />
-                    </a>
                   </Stack>
                 }
               />

@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Router, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route, BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Page from '@demo/components/Page';
 import store from '@demo/store';
@@ -40,19 +40,9 @@ function App() {
             </div>
           }
         >
-          <Router history={history}>
-            <Switch>
-              <Route
-                path='/'
-                exact
-                component={Home}
-              />
-              <Route
-                path='/editor'
-                component={Editor}
-              />
-            </Switch>
-          </Router>
+          <BrowserRouter basename="/">
+              <Editor />
+          </BrowserRouter>
         </Suspense>
       </Page>
     </Provider>
