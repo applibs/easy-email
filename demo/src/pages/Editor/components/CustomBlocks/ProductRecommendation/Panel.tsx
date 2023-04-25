@@ -9,55 +9,55 @@ export function Panel() {
     <AttributesPanelWrapper style={{ padding: '20px' }}>
       <Stack vertical>
         <NumberField
-          label='Quantity'
+          label={t('Quantity')}
           inline
           max={6}
           name={`${focusIdx}.data.value.quantity`}
         />
         <TextField
-          label='Title'
+          label={t('Title')}
           name={`${focusIdx}.data.value.title`}
           inline
           alignment='center'
         />
         <TextField
-          label='Button text'
+          label={t('Button text')}
           name={`${focusIdx}.data.value.buttonText`}
           inline
           alignment='center'
         />
         <ColorPickerField
-          label='Background color'
+          label={t('Background color')}
           name={`${focusIdx}.attributes.background-color`}
           inline
           alignment='center'
         />
         <ColorPickerField
-          label='Title color'
+          label={t('Title color')}
           name={`${focusIdx}.attributes.title-color`}
           inline
           alignment='center'
         />
         <ColorPickerField
-          label='Product name color'
+          label={t('Product name color')}
           name={`${focusIdx}.attributes.product-name-color`}
           inline
           alignment='center'
         />
         <ColorPickerField
-          label='Product price color'
+          label={t('Product price color')}
           name={`${focusIdx}.attributes.product-price-color`}
           inline
           alignment='center'
         />
         <ColorPickerField
-          label='Button color'
+          label={t('Button color')}
           name={`${focusIdx}.attributes.button-color`}
           inline
           alignment='center'
         />
         <ColorPickerField
-          label='Button text color'
+          label={t('Button text color')}
           name={`${focusIdx}.attributes.button-text-color`}
           inline
           alignment='center'

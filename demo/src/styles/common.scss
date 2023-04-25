@@ -1,22 +1,29 @@
 $primary-color: #417505;
 $max-page-size: 480px;
 
-* {
-  box-sizing: border-box;
-}
+#root {
+  * {
+    box-sizing: border-box;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
 
-body {
-  color: rgba(0, 0, 0, 0.65);
-  font-size: 14px;
+  body & {
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 14px;
+  }
+
+  .arco-form-label-item {
+    line-height: 16px;
+    align-self: center;
+  }
 }
 
 .visible-on-hover {

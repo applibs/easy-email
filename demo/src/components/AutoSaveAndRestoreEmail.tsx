@@ -6,6 +6,7 @@ import { IEmailTemplate } from 'easy-email-editor';
 import { Modal } from '@arco-design/web-react';
 import { getIsFormTouched } from '@demo/utils/getIsFormTouched';
 import { useQuery } from '@demo/hooks/useQuery';
+import {JsonToMjml} from "easy-email-core";
 
 export function AutoSaveAndRestoreEmail() {
   const formState = useFormState<any>();
@@ -21,6 +22,25 @@ export function AutoSaveAndRestoreEmail() {
   useEffect(() => {
     if (dirty) {
       setCurrentEmail(formState.values);
+
+      //todo: zde ulozit jakoukoliv zmenu, takze je mozne ulozit externe
+      window.localStorage.setItem('EMAIL_TEMPLATE', JSON.stringify(formState.values));
+
+      (async () => {
+        const mjml = (await import('mjml-browser')).default;
+        const htmlContent = mjml(
+            JsonToMjml({
+              data: formState.values.content,
+              mode: 'production',
+              context: formState.values.content,
+            }),
+            {
+              //beautify: true, //only in CLI
+              validationLevel: 'soft',
+            },
+        ).html;
+        window.localStorage.setItem('EMAIL_HTML', htmlContent);
+      })();
     }
   }, [dirty, formState.values, setCurrentEmail]);
 
@@ -51,15 +71,15 @@ export function AutoSaveAndRestoreEmail() {
   return (
     <>
       <Modal
-        title='Restore email?'
+        title={t('Restore email?')}
         visible={Boolean(visible && currentEmail)}
         onOk={onRestore}
-        okText='Restore'
-        cancelText='Discard'
+        okText={t('Restore')}
+        cancelText={t('Discard')}
         onCancel={onDiscard}
         style={{ zIndex: 10000 }}
       >
-        <p>Are you want to restore unsaved email?</p>
+        <p>{t('Are you want to restore unsaved email?')}</p>
       </Modal>
       <WarnAboutUnsavedChanges onBeforeConfirm={onBeforeConfirm} />
     </>

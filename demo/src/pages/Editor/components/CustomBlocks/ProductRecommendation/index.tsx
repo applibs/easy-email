@@ -6,6 +6,7 @@ import {
   getPreviewClassName,
   AdvancedType,
   mergeBlock,
+    t,
 } from 'easy-email-core';
 
 import { CustomBlocksType } from '../constants';
@@ -38,7 +39,7 @@ const productPlaceholder = {
 };
 
 export const ProductRecommendation = createCustomBlock<IProductRecommendation>({
-  name: 'Product recommendation',
+  name: t('Product recommendation'),
   type: CustomBlocksType.PRODUCT_RECOMMENDATION,
   validParentType: [BasicType.PAGE, AdvancedType.WRAPPER, BasicType.WRAPPER],
   create: payload => {
@@ -46,8 +47,8 @@ export const ProductRecommendation = createCustomBlock<IProductRecommendation>({
       type: CustomBlocksType.PRODUCT_RECOMMENDATION,
       data: {
         value: {
-          title: 'You might also like',
-          buttonText: 'Buy now',
+          title: t('You might also like'),
+          buttonText: t('Buy now'),
           quantity: 3,
         },
       },

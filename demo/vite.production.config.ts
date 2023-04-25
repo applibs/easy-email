@@ -4,6 +4,7 @@ import path from 'path';
 import { injectHtml } from 'vite-plugin-html';
 
 export default defineConfig({
+  base: '/libs/easy-email/',
   resolve: {
     alias: {
       '@demo': path.resolve(__dirname, './src'),
@@ -22,6 +23,7 @@ export default defineConfig({
     manifest: false,
     sourcemap: false,
     target: 'es2015',
+    chunkSizeWarningLimit: 5000,
     rollupOptions: {
       output: {
         manualChunks(id) {

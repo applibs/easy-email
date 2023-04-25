@@ -111,7 +111,7 @@ export function ImageUploader(props: ImageUploaderProps) {
       return (
         <div className={styles['upload']} onClick={onUpload}>
           <IconPlus />
-          <div>Upload</div>
+          <div>{t('Upload')}</div>
         </div>
       );
     }
