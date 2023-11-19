@@ -117,7 +117,7 @@ export function ColorPicker(props: ColorPickerProps) {
             <style>
               {`
                 [title="${transparentColor}"] {
-                  background-image: url("/Modules/Mailing/Assets/Mailing/easy-email/images/pickColor.png") !important
+                  background-image: url("/assets/libs/easy-email/images/pickColor.png") !important
                 }
 
                 `}

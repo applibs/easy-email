@@ -32,6 +32,6 @@ export async function emailToImage(content: IBlockData) {
   try {
     return await services.common.uploadByQiniu(blob);
   } catch (error) {
-    return process.env.NODE_ENV === "production" ? '/Modules/Mailing/Assets/Mailing/easy-email/images/emailImage.png' : imgEmail;
+    return process.env.NODE_ENV === "production" ? '/assets/libs/easy-email/images/emailImage.png' : imgEmail;
   }
 }

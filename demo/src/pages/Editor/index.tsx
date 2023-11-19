@@ -337,7 +337,7 @@ export default function Editor() {
   const { collectionCategory } = useCollection();
   const { width } = useWindowSize();
   const smallScene = width < 1400;
-  const enableHeader = true;
+  const enableHeader = false;
   const [placeholders, setPlaceholders] = useState({});
   const [styles, setStyles] = useState({});
 
