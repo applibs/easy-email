@@ -74,7 +74,7 @@ export function Page({ hideSubTitle, hideSubject }: PageProps) {
                   span={11}
                 >
                   <NumberField
-                    label={t('Font size (px)')}
+                    label='Font size (px)'
                     name={`${focusIdx}.data.value.font-size`}
                     config={pixelAdapter}
                     autoComplete='off'

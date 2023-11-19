@@ -5,6 +5,7 @@ import { getImg } from '@extensions/AttributePanel/utils/getImg';
 import Color from 'color';
 import { PresetColorsContext } from '@extensions/AttributePanel/components/provider/PresetColorsProvider';
 import { ColorPickerContent } from './ColorPickerContent';
+import imgPick from '../../../../../../demo/src/images/pickColor.png';
 
 export interface ColorPickerProps extends PopoverProps {
   onChange?: (val: string) => void;
@@ -116,7 +117,7 @@ export function ColorPicker(props: ColorPickerProps) {
             <style>
               {`
                 [title="${transparentColor}"] {
-                  background-image: url("https://res.cloudinary.com/flashmail/image/upload/v1656944736/cl4vlvzcm05911zsaor6aktl0/ce7qm7lxs5jm47ggabha.png") !important
+                  background-image: url("/Modules/Mailing/Assets/Mailing/easy-email/images/pickColor.png") !important
                 }
 
                 `}

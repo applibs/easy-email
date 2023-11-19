@@ -7,7 +7,7 @@ import { Popconfirm } from '@arco-design/web-react';
 import { Link, useHistory } from 'react-router-dom';
 import template from '@demo/store/template';
 import { useDispatch } from 'react-redux';
-import templateList from '@demo/store/templateList';
+//import templateList from '@demo/store/templateList';
 import { pushEvent } from '@demo/utils/pushEvent';
 import { getLoadingByKey, useLoading } from '@demo/hooks/useLoading';
 import { Loading } from '@demo/components/loading';
@@ -32,7 +32,7 @@ export function CardItem(props: CardItemProps) {
         id: data.article_id,
         _actionKey: data.article_id,
         success() {
-          dispatch(templateList.actions.fetch(undefined));
+          //dispatch(templateList.actions.fetch(undefined));
         },
       })
     );

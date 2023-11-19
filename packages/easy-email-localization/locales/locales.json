@@ -785,6 +785,9 @@
     "Attributes" : "Vlastnosti",
     "Items" : "Položky",
     "start typing" : "začněte psát",
-    "Remove all padding" : "Odstranění všech výplní"
+    "Remove all padding" : "Odstranění všech výplní",
+    "Wrong type of file to upload!" : "Špatný typ nahraného souboru!",
+    "The uploaded file cannot be smaller than" : "Nahraný soubor nesmí být menší než",
+    "The uploaded file cannot be bigger than" : "Nahraný soubor nesmí být větší než"
   }
 }

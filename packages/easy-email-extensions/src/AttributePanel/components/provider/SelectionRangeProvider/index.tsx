@@ -11,18 +11,31 @@ export const SelectionRangeContext = React.createContext<{
   setSelectionRange: () => {},
 });
 
-export const SelectionRangeProvider: React.FC<{}> = (props) => {
+export const SelectionRangeProvider: React.FC<{
+  children: React.ReactNode | React.ReactElement;
+}> = props => {
   const [selectionRange, setSelectionRange] = useState<Range | null>(null);
 
   useEffect(() => {
     const onSelectionChange = () => {
       try {
-        const range = (getShadowRoot() as any).getSelection().getRangeAt(0);
-        if (range) {
-          const toolbar = getShadowRoot().getElementById(RICH_TEXT_TOOL_BAR);
-          if (toolbar && toolbar.contains(range.commonAncestorContainer))
-            return;
-          setSelectionRange(range);
+        //todo: vyresit funkcnost ve Firefoxu, ve FF nefunguje: Placeholder add
+        if (navigator.userAgent.indexOf("Firefox") > -1 || navigator.userAgent.indexOf("Safari") > -1) {
+          const selection = window.getSelection();
+          if (selection && selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const shadowRoot = getShadowRoot(); // Replace with the appropriate code to obtain the shadow root
+            const toolbar = shadowRoot.getElementById(RICH_TEXT_TOOL_BAR);
+            if (toolbar && toolbar.contains(range.commonAncestorContainer)) return;
+            setSelectionRange(range);
+          }
+        } else {
+          const range = (getShadowRoot() as any).getSelection().getRangeAt(0);
+          if (range) {
+            const toolbar = getShadowRoot().getElementById(RICH_TEXT_TOOL_BAR);
+            if (toolbar && toolbar.contains(range.commonAncestorContainer)) return;
+            setSelectionRange(range);
+          }
         }
       } catch (error) {}
     };

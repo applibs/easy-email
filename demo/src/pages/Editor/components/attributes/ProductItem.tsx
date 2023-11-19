@@ -1,219 +1,226 @@
-import {useBlock, useFocusIdx} from 'easy-email-editor';
-import {Grid, Button, List, AutoComplete, AutoCompleteProps} from '@arco-design/web-react';
-import React, {useCallback, useEffect, useState} from 'react';
-import {cloneDeep, get} from 'lodash';
-import {IconDelete, IconPlus} from '@arco-design/web-react/icon';
-import {IProduct, ProductBlock} from "@demo/pages/Editor/components/CustomBlocks/Products/generateProductBlock";
+import { useBlock, useFocusIdx } from 'easy-email-editor';
+import { Grid, Button, List, AutoComplete } from '@arco-design/web-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { cloneDeep, get } from 'lodash';
+import { IconDelete, IconPlus } from '@arco-design/web-react/icon';
+import {
+  Product,
+  ProductBlock,
+  TProductList,
+} from '@demo/pages/Editor/components/CustomBlocks/Products/generateProductBlock';
 import Mock from 'mockjs';
-import axios from "axios";
+import axios from 'axios';
 
-export function ProductItems() {
-    const {focusIdx} = useFocusIdx();
-    const {focusBlock, change, values} = useBlock();
-
-    const products = focusBlock?.data.value?.products as
-        | undefined
-        | ProductBlock['data']['value']['products'];
-
-    /*
-    const onConditionToggle = useCallback(
-        (enabled: boolean) => {
-            if (enabled) {
-                if (!products) {
-                    change(`${focusIdx}.data.value.products`, {
-                        enabled: true,
-                        symbol: OperatorSymbol.AND,
-                        groups: [
-                            {
-                                symbol: OperatorSymbol.AND,
-                                groups: [
-                                    {
-                                        left: '',
-                                        operator: Operator.TRUTHY,
-                                        right: ''
-                                    }
-                                ],
-                            }
-                        ] as unknown[],
-                    } as ICondition);
-                }
-            }
-            change(`${focusIdx}.data.value.products.enabled`, enabled);
-        },
-        [change, products, focusIdx]
-    );
-*/
-    const onAddProduct = useCallback((path: string) => {
-        const groups = get(values, path) || [] as IProduct[];
-        if (groups) {
-            groups.push({
-                id: 0,
-                title: '',
-                price: 0,
-                currency: '',
-                image: '',
-                url: ''
-            });
-            change(path, [...groups]);
-        }
-    }, [change, values]);
-    /*
-        const onAddSubCondition = useCallback((path: string) => {
-            const groups = get(values, path) as IConditionGroup['groups'];
-
-            groups.push({
-                left: '',
-                operator: Operator.TRUTHY,
-                right: ''
-
-            });
-            change(path, [...groups]);
-        }, [change, values]);
-    */
-    // content.children.[0].children.[0].data.value.condition.groups.1.groups
-    const onDelete = useCallback((path: string, gIndex: number) => {
-        if (!products) return;
-        const groups = cloneDeep(get(values, path)) as any[];
-
-        // remove empty array
-        groups.splice(gIndex, 1);
-        change(path, [...groups]);
-
-    }, [change, products, values]);
-    /*
-      if (
-        !focusBlock?.type ||
-        !Object.values(AdvancedType).includes(focusBlock?.type as any)
-      ) {
-        return null;
-      }*/
-
-    //const isEmpty = !products?.length;
-
-    return (
-        <List
-            header={(
-                <Grid.Row justify='space-between'>
-                    <Button onClick={() => onAddProduct(`${focusIdx}.data.value.products`)} size='small'
-                            icon={<IconPlus/>}/>
-                </Grid.Row>
-            )}
-            dataSource={products}
-            render={
-                (product, gIndex) => {
-                    return (
-                        <List.Item key={gIndex}>
-                            <div>
-                                <Grid.Row justify='space-between'>
-                                    <Grid.Col span={24}>
-                                        {
-                                            <ProductItem
-                                                onDelete={onDelete}
-                                                path={`${focusIdx}.data.value.products`}
-                                                gIndex={gIndex}
-                                                key={gIndex}
-                                            />
-                                        }
-                                    </Grid.Col>
-                                </Grid.Row>
-                            </div>
-                        </List.Item>
-                    );
-                }
-            }
-        />
-    );
+interface IProductItemsProps {
+  max: number;
 }
 
-export function ProductItem({path, onDelete, gIndex}: {
-    path: string;
-    gIndex: number;
-    onDelete: (path: string, gIndex: number) => void;
-}) {
+export function ProductItems(props: IProductItemsProps) {
+  const { focusIdx } = useFocusIdx();
+  const { focusBlock, change, values } = useBlock();
 
-    //const name = `${path}.${gIndex}`;
-    //const {input: {value}} = useField(name);
-    /*
-        const renderSuggestion = (suggestion: Suggestion) => {
-            return `${suggestion.title}`;
-        };
-    */
-    //todo:
-    //https://hackernoon.com/autocomplete-search-component-with-react-and-typescript
-    //https://github.com/ljaviertovar/autocomplete-search-react-ts?ref=hackernoon.com
+  const products = focusBlock?.data.value?.products as
+    | undefined
+    | ProductBlock['data']['value']['products'];
 
-    //const { renderSuggestion = (s: S) => s, onSelect, getSuggestions } = props;
-    const [value, setValue] = useState("");
-    const [suggestions, setSuggestions] = useState<AutoCompleteProps["data"]>([{id:0,value:"",name:""}]);
+  const onAddProduct = useCallback((path: string) => {
+    const groups = get(values, path) || [] as TProductList;
+    if (groups) {
+      groups.push({
+        id: 0,
+        title: '',
+        price: 0,
+        currency: 'USD',
+        image: '',
+        url: '',
+      });
+      change(path, [...groups]);
+    }
+  }, [change, values]);
 
+  const onDelete = useCallback((path: string, gIndex: number) => {
+    if (!products) return;
+    const groups = cloneDeep(get(values, path)) as any[];
 
-    //https://arco.design/docs/en-US/pro/mock
-    useEffect(() => {
-        if(value) {
-            if (process.env.NODE_ENV === 'development') {
-                const data = Mock.mock({
-                    'data|4-6': [
-                        {
-                            'id|+1': 1,
-                            "value|+1": [
-                                "aaa",
-                                "bbb",
-                                "ccc"
-                            ],
-                            "name|+1": [
-                                "aaa",
-                                "bbb",
-                                "ccc"
-                            ],
-                            "title|+1": [
-                                "aaa",
-                                "bbb",
-                                "ccc"
-                            ],
-                            image: '',
-                            price: '100',
-                            currency: 'CZK',
-                            url: ''
-                        },
-                    ],
-                });
-                console.log(data.data);
+    // remove empty array
+    groups.splice(gIndex, 1);
+    change(path, [...groups]);
 
-                setSuggestions(data.data);
-                /*setSuggestions([{
-                    id: 0,
-                    value: 'aaa',
-                    name: 'aaa',
-                    title: 'User 7352772',
-                    image: '',
-                    price: '100',
-                    currency: 'CZK',
-                    url: ''
-                }]);*/
+  }, [change, products, values]);
 
-            } else {
-                axios.post('https://foo.com/login', {}).then(
-                    (response) => setSuggestions(response)
-                );
-            }
-        }
+  const onSelected = useCallback((path: string, gIndex: number, product: Product) => {
+    //if (!products) return;
+    const groups = cloneDeep(get(values, path)) as any[];
 
-    }, [value]);
+    if (product.id > 0) {
+      if (groups.length > 0) {
+        groups[gIndex] = product;
+      } else {
+        groups.push(product);
+      }
 
-    return (
-        <Grid.Row align='end'>
-            <Grid.Col span={21}>
-                <AutoComplete
-                    value={value}
-                    onChange={(value, option) => setValue(value)}
-                    onSelect={(value, option) => {console.log(`onSelect ${value}`);console.log(option)}}
-                    data={suggestions}
-                />
-            </Grid.Col>
-            <Grid.Col span={3}>
-                <Button onClick={() => onDelete(path, gIndex)} icon={<IconDelete/>}/>
-            </Grid.Col>
+      change(path, [...groups]);
+    }
+
+  }, [change, products, values]);
+
+  const isEmpty = !products?.length;
+
+  return (
+    <List
+      header={(
+        <Grid.Row justify='space-between'>
+          {(isEmpty || (products?.length < props.max)) &&
+            <Button
+              onClick={() => onAddProduct(`${focusIdx}.data.value.products`)}
+              size='small'
+              icon={<IconPlus />}
+            />
+          }
 
         </Grid.Row>
-    );
+      )}
+      dataSource={products?.slice(0, props.max)}
+      render={
+        (product, gIndex) => {
+          return (
+            <List.Item key={gIndex}>
+              <div>
+                <Grid.Row justify='space-between'>
+                  <Grid.Col span={24}>
+                    {
+                      <ProductItem
+                        onDelete={onDelete}
+                        path={`${focusIdx}.data.value.products`}
+                        gIndex={gIndex}
+                        key={gIndex}
+                        onSelected={onSelected}
+                        product={product}
+                      />
+                    }
+                  </Grid.Col>
+                </Grid.Row>
+              </div>
+            </List.Item>
+          );
+        }
+      }
+    />
+  );
+}
+
+export function ProductItem({ path, onDelete, gIndex, onSelected, product }: {
+  path: string;
+  gIndex: number;
+  onDelete: (path: string, gIndex: number) => void;
+  onSelected: (path: string, gIndex: number, product: Product) => void;
+  product: Product | null
+}) {
+  const [init, setInit] = useState(true);
+
+  const [value, setValue] = useState<string>(product?.title ?? '');
+  const [suggestions, setSuggestions] = useState<TProductList | []>([]);
+
+  useEffect(() => {
+    if (init) {
+      setInit(false);
+      return;
+    }
+
+    if (value) {
+      if (process.env.NODE_ENV === 'development') {
+        const data = Mock.mock({
+          'data|4-6': [
+            {
+              'id|+1': 1,
+              'title|+1': [
+                'aaa',
+                'abc',
+                'bbb',
+                'bcd',
+                'ccc',
+                'cde',
+              ],
+              'code|+1': [
+                '111',
+                '222',
+                '333',
+                '444',
+                '555',
+                '666',
+              ],
+              image: '',
+              price: 1000,
+              currency: 'CZK',
+              url: '',
+            },
+          ],
+        });
+
+        setSuggestions(data.data);
+
+      } else {
+        if(value.length >= 2) {
+          axios.get<TProductList>('/api/products/search',
+            {
+              params: {
+                searchText: value,
+                limit: 20
+              }
+            }).then(
+            (response) => {
+              setSuggestions(response.data);
+            }
+          ).catch(error => {
+            // handle error
+            console.log(error);
+          });
+        }
+
+      }
+    }
+
+  }, [value]);
+
+  useEffect(() => {
+    if(product?.title || !init) {
+      setValue(product?.title || '');
+    }
+  }, [product]);
+
+  function getItem(id: number) {
+    return suggestions.filter(product => product.id === id)[0];
+  }
+
+  function filterOption(inputValue, option) {
+    return option.props.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1 || option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
+  }
+
+  return (
+    <Grid.Row align='end'>
+      <Grid.Col span={21}>
+        <AutoComplete
+          strict={false}
+          value={value}
+          onChange={(value, option) => setValue(value)}
+          onSelect={(value, option) => {
+            onSelected(path, gIndex, getItem(option.extra.id));
+          }}
+          filterOption={filterOption}
+          data={suggestions && suggestions.map(
+            (item) =>
+              ({
+                id: item.id,
+                value: item.code,
+                name: item.title,
+              }),
+          )}
+        />
+      </Grid.Col>
+      <Grid.Col span={3}>
+        <Button onClick={() => onDelete(path, gIndex)} icon={<IconDelete />} />
+      </Grid.Col>
+
+    </Grid.Row>
+  );
 }

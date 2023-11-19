@@ -24,6 +24,7 @@ export type IPage = IBlockData<
       inline?: 'inline';
     }[];
     extraHeadContent?: string;
+    extraBodyContent?: string;
     responsive?: boolean;
     'font-family': string;
     'font-size': string;
@@ -107,6 +108,10 @@ export const Page = createBlock<IPage>({
       ? `<mj-raw>${value.extraHeadContent}</mj-raw>`
       : '';
 
+    const extraBodyContent = value.extraBodyContent
+      ? `<mj-raw>${value.extraBodyContent}</mj-raw>`
+      : '';
+
     return (
       <>
         {`
@@ -151,8 +156,7 @@ export const Page = createBlock<IPage>({
             key={index}
             data={child}
           />
-        ))}
-
+        ))}${extraBodyContent}
         {'</mj-body></mjml > '}
       </>
     );

@@ -52,12 +52,13 @@ export const Text = createBlock<IText>({
   validParentType: [BasicType.COLUMN, BasicType.HERO],
   render(params) {
     const { data } = params;
+    //console.log('data data:', data);
     return (
       <BasicBlock
         params={params}
         tag='mj-text'
       >
-        {data.data.value.content}
+        {data.data.value?.content}
       </BasicBlock>
     );
   },

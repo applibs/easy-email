@@ -1,7 +1,7 @@
 $primary-color: #417505;
 $max-page-size: 480px;
 
-#root {
+.easy-email {
   * {
     box-sizing: border-box;
   }
@@ -15,16 +15,10 @@ $max-page-size: 480px;
     margin: 0;
   }
 
-  body & {
-    color: rgba(0, 0, 0, 0.65);
-    font-size: 14px;
-  }
-
-  .arco-form-label-item {
-    line-height: 16px;
-    align-self: center;
-  }
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
 }
+
 
 .visible-on-hover {
   opacity: 0;

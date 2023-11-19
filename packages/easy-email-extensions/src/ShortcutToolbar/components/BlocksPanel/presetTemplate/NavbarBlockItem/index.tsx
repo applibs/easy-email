@@ -58,7 +58,7 @@ const list = [
       },
       attributes: {
         align: 'center',
-        'base-url': 'https://mjml.io',
+        'base-url': window.location.host,
       },
       children: [],
     },

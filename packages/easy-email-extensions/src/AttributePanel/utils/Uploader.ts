@@ -130,7 +130,7 @@ export class Uploader {
       }
       for (const file of files) {
         if (file.type.indexOf(fileType) !== 0) {
-          return '上传文件类型错误!';
+          return t('Wrong type of file to upload!');
         }
       }
     }
@@ -141,10 +141,10 @@ export class Uploader {
     const options = this.options;
     for (const file of files) {
       if (options.minSize && file.size < options.minSize) {
-        return `上传文件不能小于 ${options.minSize}`;
+        return `${t('The uploaded file cannot be smaller than')} ${options.minSize}`;
       }
       if (options.maxSize && file.size > options.maxSize) {
-        return `上传文件不能小于 ${options.maxSize}`;
+        return `${t('The uploaded file cannot be bigger than')} ${options.maxSize}`;
       }
     }
     return null;

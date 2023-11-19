@@ -7,8 +7,8 @@ import {
   IBlockData,
   IPage,
   standardBlocks,
-  TemplateEngineManager
-} from "easy-email-core";
+  TemplateEngineManager,
+} from 'easy-email-core';
 
 export function generateProductBlock<T extends ProductBlock>(option: {
   type: string;
@@ -74,8 +74,8 @@ export function generateProductBlock<T extends ProductBlock>(option: {
       }
 
       if (products && products.enabled) {
-        children = TemplateEngineManager.generateTagTemplate('products')(
-            products,
+        children = TemplateEngineManager.generateTagTemplate('iteration')(
+          products,
           children,
         );
       }
@@ -99,7 +99,7 @@ export function generateProductBlock<T extends ProductBlock>(option: {
 export interface ProductBlock extends IBlockData {
   data: {
     value: {
-      products?: Array<IProduct>;
+      products?: TProductList;
       iteration?: {
         enabled: boolean;
         dataSource: string; // -> collection.products
@@ -111,20 +111,15 @@ export interface ProductBlock extends IBlockData {
   };
 }
 
-export interface IProduct {
+export interface Product {
   id: number;
   title: string;
   price: number;
   currency: string;
   image: string;
   url: string;
+  code: string;
 }
 
-export interface IProductData {
-  value: string;
-  name: string;
-  price: number;
-  currency: string;
-  image: string;
-  url: string;
-}
+
+export type TProductList = Product[]
