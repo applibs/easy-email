@@ -38,10 +38,10 @@ ImageManager.add(customImagesMap, true);
 
 const productPlaceholder = {
   image: getImg('IMAGE_59'),
-  title: 'Produkt',
-  price: 1000,
-  url: 'https://www.crs-net.cz',
-  currency: 'CZK',
+  title: 'Product',
+  price: 100,
+  url: 'https://www.domain.com',
+  currency: 'USD',
   id: 0,
 };
 

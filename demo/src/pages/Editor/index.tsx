@@ -53,6 +53,7 @@ import imgProducts from '../../images/products.png';
 import { ImageManager } from 'easy-email-core';
 import { customImagesMap } from './images';
 import { b64EncodeUnicode } from '@demo/services/common';
+import {AutoSaveAndRestoreEmail} from "@demo/components/AutoSaveAndRestoreEmail";
 
 ImageManager.add(customImagesMap, true);
 
@@ -301,7 +302,7 @@ const defaultCategories: ExtensionProps['categories'] = [
   },
 ];
 
-const imageCompression = import('browser-image-compression');
+//const imageCompression = import('browser-image-compression');
 
 const fontList = [
   'Arial',
@@ -341,16 +342,15 @@ export default function Editor() {
   const [placeholders, setPlaceholders] = useState({});
   const [styles, setStyles] = useState({});
 
-  /*
-      useEffect(() => {
-          const placeholders = services.common.getPlaceholders();
-          placeholders.then(res => {
-              setPlaceholders(res);
-          });
-
-      }, [templateData]);
-  */
-
+  useEffect(() => {
+    const element = document.getElementById('EMAIL_PLACEHOLDERS') as HTMLElement;
+    if (element && element.textContent) {
+      setPlaceholders(JSON.parse(element.textContent));
+    } else {
+      setPlaceholders({  });
+    }
+  }, []);
+/*
   useEffect(() => {
     const placeholders = services.common.getPlaceholders();
     placeholders.then(res => {
@@ -359,7 +359,7 @@ export default function Editor() {
       setPlaceholders({ 'test': 'test' });
     });
   }, []);
-
+*/
   useEffect(() => {
     const styles = services.common.getStyles();
     styles.then(res => {
@@ -405,13 +405,13 @@ export default function Editor() {
 
   // upload pres URL na backendu
   const onUploadImage = async (blob: Blob) => {
-    const compressionFile = await (
+    /*const compressionFile = await (
       await imageCompression
     ).default(blob as File, {
       maxWidthOrHeight: initialValues ? initialValues.content.attributes.width.replace('px', '') : 1440,
-    });
+    });*/
 
-    return services.common.upload(compressionFile);
+    return services.common.upload(blob as File);//compressionFile
   };
 
   const onChangeMergeTag = useCallback((path: string, val: any) => {
@@ -621,6 +621,7 @@ export default function Editor() {
                 >
                   <EmailEditor />
                 </StandardLayout>
+                <AutoSaveAndRestoreEmail/>
                 {
                   enableHeader && <PageHeader
                     style={{ background: 'var(--color-bg-2)' }}

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dwkp0e1yo/image/upload';
 
-const UPLOAD_URL = '/manage/mailing-compositions/image-upload';
+const UPLOAD_URL = '/ajaxcall/uploadFileEmail';
 
 const PLACEHOLDERS_URL = '/api/mailing-data/placeholders';
 
@@ -30,6 +30,11 @@ export const common = {
   async upload(file: File | Blob): Promise<string> {
     const data = new FormData();
     data.append('file', file);
+    axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    axios.defaults.headers.common['X-Ajax'] = '1';
+    // @ts-ignore
+    axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector("meta[name=csrf-token]").getAttribute("content");
+
     const res = await axios.post<{ url: string }>(UPLOAD_URL, data);
 
     return res.data.url;
@@ -37,6 +42,7 @@ export const common = {
 
   async getPlaceholders() {
     const campaign_id = document.querySelector('#data_campaign_id');//%7B%7D
+    //
     return (await axios.get<{}>(
       PLACEHOLDERS_URL,
       {
